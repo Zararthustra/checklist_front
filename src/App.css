@@ -1,0 +1,121 @@
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500&display=swap');
+
+@media (min-width: 800px) {
+  .category,
+  .addCategory {
+    width: 40rem !important;
+  }
+}
+@media (min-width: 500px) {
+  .loginPage {
+    width: 25rem !important;
+  }
+}
+:root {
+  --background: #eeeeee;
+  --font: 'Archivo Narrow', sans-serif;
+  font-family: var(--font);
+  font-size: 16px;
+  background-color: var(--background);
+}
+
+/*------------------------------------*/
+
+.logout {
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
+}
+.category,
+.addCategory,
+.loginPage {
+  width: 100%;
+}
+
+.task {
+  overflow: hidden;
+  animation: openTask .5s ease-in-out;
+  transition: all .5s;
+  transform-origin: top;
+}
+.category {
+  animation: openCategory 1s ease-in-out;
+  transform-origin: center;
+  transition: all .5s;
+  overflow: hidden;
+}
+
+@keyframes openTask {
+  from {
+    transform: scaleY(0);
+  }
+  to {
+    transform: scaleY(1);
+  }
+}
+@keyframes openCategory {
+  from {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/*------------------------------------*/
+
+.toaster {
+  animation: 7s ease-in-out dropDownToaster;
+}
+
+@keyframes dropDownToaster {
+  0% {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+
+  7% {
+    transform: translateY(10%);
+  }
+
+  12% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  80% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/*------------------------------------*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+/*------------------------------------*/
