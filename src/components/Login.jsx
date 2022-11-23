@@ -37,20 +37,32 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
       })
     )
       .then((user) => {
-        console.log(user.meta.requestStatus);
-        if (user.meta.requestStatus === "rejected")
+        if (user.error?.code === "ERR_BAD_REQUEST")
           return setTriggerToaster({
             type: "error",
             message: "Compte inconnu 🥸",
           });
-        const decoded = jwt_decode(user.payload.access);
-        saveLocalStorage("username", username);
-        saveLocalStorage("userid", decoded.user_id);
-        saveLocalStorage("password", password);
-        saveLocalStorage("access", user.payload.access);
-        saveLocalStorage("refresh", user.payload.refresh);
+        if (user.meta.requestStatus === "rejected")
+          return setTriggerToaster({
+            type: "error",
+            message: `Une erreur est survenue: ${user.error?.message} 😦`,
+          });
+        if (user.meta.requestStatus === "fulfilled") {
+          const decoded = jwt_decode(user.payload.access);
+          saveLocalStorage("username", username);
+          saveLocalStorage("userid", decoded.user_id);
+          saveLocalStorage("password", password);
+          saveLocalStorage("access", user.payload.access);
+          saveLocalStorage("refresh", user.payload.refresh);
 
-        setIsAuth(true);
+          setIsAuth(true);
+          return setTriggerToaster({
+            type: "success",
+            message: `Bonjour ${
+              (username && username[0]).toUpperCase() + username.slice(1)
+            } 👋`,
+          });
+        }
       })
       .catch((error) => console.log(error));
   };
@@ -75,7 +87,6 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
       })
     )
       .then((res) => {
-        console.log(res);
         if (res.error?.code === "ERR_BAD_REQUEST")
           return setTriggerToaster({
             type: "error",
@@ -86,7 +97,7 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
             type: "error",
             message: `Une erreur est survenue: ${res.error?.message} 😦`,
           });
-        else {
+        if (res.meta.requestStatus === "fulfilled") {
           setIsCreated(true);
           return setTriggerToaster({
             type: "success",
@@ -137,85 +148,89 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
         }}
         onSubmit={handleLogin}
       >
-        <div
-          style={{
-            padding: "1rem 0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-          }}
-        >
-          <label
+        {!isCreated && (
+          <div
             style={{
-              position: "relative",
-              top: "1rem",
-              left: "-4rem",
-              padding: "0 1rem",
-              fontSize: "1.5rem",
-              backgroundColor: "var(--background)",
+              padding: "1rem 0",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
             }}
-            htmlFor="username"
           >
-            Compte
-          </label>
-          <input
+            <label
+              style={{
+                position: "relative",
+                top: "1rem",
+                left: "-4rem",
+                padding: "0 1rem",
+                fontSize: "1.5rem",
+                backgroundColor: "var(--background)",
+              }}
+              htmlFor="username"
+            >
+              Compte
+            </label>
+            <input
+              style={{
+                height: "3rem",
+                width: "17rem",
+                border: "1px solid #333",
+                outline: "none",
+                paddingLeft: "1rem",
+                backgroundColor: "transparent",
+              }}
+              required
+              type="text"
+              value={username}
+              onChange={handleChange}
+              name="username"
+              id="username"
+            />
+          </div>
+        )}
+        {!isCreated && (
+          <div
             style={{
-              height: "3rem",
-              width: "17rem",
-              border: "1px solid #333",
-              outline: "none",
-              paddingLeft: "1rem",
-              backgroundColor: "transparent",
+              padding: "1rem 0",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              flexDirection: "column",
+              marginBottom: "2rem",
             }}
-            required
-            type="text"
-            value={username}
-            onChange={handleChange}
-            name="username"
-            id="username"
-          />
-        </div>
-        <div
-          style={{
-            padding: "1rem 0",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-            flexDirection: "column",
-            marginBottom: "2rem",
-          }}
-        >
-          <label
-            style={{
-              position: "relative",
-              top: "1rem",
-              left: "-2.5rem",
-              padding: "0 1rem",
-              fontSize: "1.5rem",
-              backgroundColor: "var(--background)",
-            }}
-            htmlFor="password"
           >
-            Mot de passe
-          </label>
-          <input
-            style={{
-              height: "3rem",
-              width: "17rem",
-              border: "1px solid #333",
-              outline: "none",
-              paddingLeft: "1rem",
-              backgroundColor: "transparent",
-            }}
-            required
-            type="password"
-            value={password}
-            onChange={handleChange}
-            name="password"
-            id="password"
-          />
-        </div>
+            <label
+              style={{
+                position: "relative",
+                top: "1rem",
+                left: "-2.5rem",
+                padding: "0 1rem",
+                fontSize: "1.5rem",
+                backgroundColor: "var(--background)",
+              }}
+              htmlFor="password"
+            >
+              Mot de passe
+            </label>
+            <input
+              style={{
+                height: "3rem",
+                width: "17rem",
+                border: "1px solid #333",
+                outline: "none",
+                paddingLeft: "1rem",
+                backgroundColor: "transparent",
+              }}
+              required
+              type="password"
+              value={password}
+              onChange={handleChange}
+              name="password"
+              id="password"
+            />
+          </div>
+        )}
         <div
           style={{
             backgroundColor: "#333",
@@ -229,9 +244,24 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
             overflow: "hidden",
           }}
         >
+          <button
+            style={{
+              backgroundColor: "white",
+              border: "none",
+              outline: "none",
+              padding: "0",
+              width: "80%",
+              height: "100%",
+              color: "#333",
+              fontWeight: "600",
+              fontSize: "1.4rem",
+              cursor: "pointer",
+            }}
+          >
+            Connexion
+          </button>
           {!isCreated && (
             <button
-              className="secondaryButton"
               style={{
                 backgroundColor: "transparent",
                 border: "none",
@@ -250,22 +280,6 @@ export const Login = ({ setIsAuth, setTriggerToaster }) => {
               Créer un compte
             </button>
           )}
-          <button
-            style={{
-              backgroundColor: "white",
-              border: "none",
-              outline: "none",
-              padding: "0",
-              width: "80%",
-              height: "100%",
-              color: "#333",
-              fontWeight: "600",
-              fontSize: "1.4rem",
-              cursor: "pointer",
-            }}
-          >
-            Connexion
-          </button>
         </div>
       </form>
     </main>

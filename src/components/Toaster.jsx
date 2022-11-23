@@ -93,6 +93,7 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
         boxShadow: "0 0 50px 10px #444",
         gap: "1rem",
         color: "white",
+        cursor: "pointer",
       }}
     >
       <div
