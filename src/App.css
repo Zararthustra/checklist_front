@@ -19,6 +19,10 @@
   background-color: var(--background);
 }
 
+body {
+  margin: 0;
+}
+
 /*------------------------------------*/
 
 .logout {
