@@ -45,9 +45,10 @@ export const deleteCategory = createAsyncThunk(
 export const updateCategory = createAsyncThunk(
   "category/updateCategory",
   async (category) => {
+    const body = category.color ? { color: category.color } : { isHidden: category.isHidden }
     const response = await axios.patch(
       URL + "/" + category.id,
-      { color: category.color },
+      body,
       authHeader()
     );
     return response.data;

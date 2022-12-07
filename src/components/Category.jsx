@@ -11,7 +11,7 @@ export const Category = ({ category, setTriggerToaster }) => {
   const dispatch = useDispatch();
   const [inputTask, setInputTask] = useState("");
   const [newColor, setNewColor] = useState(null);
-  const [showTasks, setShowTasks] = useState(true);
+  const [showTasks, setShowTasks] = useState(!category.isHidden);
 
   const categoryTasks = useSelector((state) => state.task.task).filter(
     (item) => item.category === category.id
@@ -88,6 +88,25 @@ export const Category = ({ category, setTriggerToaster }) => {
     );
   };
 
+  const hideCategory = () => {
+    setShowTasks(!showTasks);
+    dispatch(updateCategory({ id: category.id, isHidden: showTasks })).then(
+      (res) => {
+        if (res.meta.requestStatus === "fulfilled") {
+          setTriggerToaster({
+            type: "info",
+            message: showTasks ? "🫣" : "🤗",
+          });
+        }
+        if (res.meta.requestStatus === "rejected")
+          setTriggerToaster({
+            type: "error",
+            message: `Une erreur est survenue: ${res.error.message} 😦`,
+          });
+      }
+    );
+  };
+
   //___________________________________________________ Render
   return (
     <div
@@ -107,6 +126,7 @@ export const Category = ({ category, setTriggerToaster }) => {
           flexDirection: "column",
           fontWeight: "600",
           backgroundColor: newColor || category.color,
+          transition: "all 0.5s",
           paddingBottom: "2rem",
         }}
       >
@@ -142,7 +162,7 @@ export const Category = ({ category, setTriggerToaster }) => {
                 style={{
                   cursor: "pointer",
                 }}
-                onClick={() => setShowTasks(!showTasks)}
+                onClick={hideCategory}
                 width="40"
                 height="40"
                 viewBox="0 0 40 40"
@@ -159,7 +179,7 @@ export const Category = ({ category, setTriggerToaster }) => {
                 style={{
                   cursor: "pointer",
                 }}
-                onClick={() => setShowTasks(!showTasks)}
+                onClick={hideCategory}
                 width="40"
                 height="40"
                 viewBox="0 0 40 40"
