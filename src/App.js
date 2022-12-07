@@ -137,6 +137,7 @@ function App() {
             justifyContent: "center",
             alignItems: "center",
             gap: "4rem",
+            width: "97%",
           }}
         >
           {getCategories.map((item, index) => {
