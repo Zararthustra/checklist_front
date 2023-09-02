@@ -29,13 +29,15 @@ export const Task = ({ task, setTriggerToaster, color }) => {
         style={{
           textAlign: "center",
           width: "100%",
-          padding: "2rem 0",
+          padding: "1rem 0",
           margin: "0",
           cursor: "pointer",
           fontSize: "1.4rem",
           fontWeight: "600",
-          border: "2px solid " + color,
-          color: color,
+          border: "2px solid " + (color[0] === "#" ? color : ""),
+          borderImageSlice: color[0] === "l" ? "1" : "",
+          borderImageSource: color[0] === "l" ? color : "",
+          color: "#333",
         }}
         onClick={removeTask}
       >

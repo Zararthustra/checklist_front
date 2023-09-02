@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Narrow:wght@500&display=swap");
 
 @media (min-width: 700px) {
   .category,
@@ -13,7 +13,7 @@
 }
 :root {
   --background: #eeeeee;
-  --font: 'Archivo Narrow', sans-serif;
+  --font: "Archivo Narrow", sans-serif;
   font-family: var(--font);
   font-size: 16px;
   background-color: var(--background);
@@ -38,14 +38,14 @@ body {
 
 .task {
   overflow: hidden;
-  animation: openTask .5s ease-in-out;
-  transition: all .5s;
+  animation: openTask 0.5s ease-in-out;
+  transition: all 0.5s;
   transform-origin: top;
 }
 .category {
   animation: openCategory 1s ease-in-out;
   transform-origin: center;
-  transition: all .5s;
+  transition: all 0.5s;
   overflow: hidden;
 }
 
