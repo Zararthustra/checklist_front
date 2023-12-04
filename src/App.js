@@ -9,6 +9,7 @@ import { retrieveTasks } from "./redux/taskSlice";
 import { Colors } from "./utils/colors";
 import { Toaster } from "./components/Toaster";
 import { Reconnect } from "./components/Reconnect";
+import IconLoader from "./components/IconLoader";
 
 function App() {
   //___________________________________________________ Variables
@@ -28,6 +29,9 @@ function App() {
   const [inputCategory, setInputCategory] = useState("");
   const [triggerToaster, setTriggerToaster] = useState(null);
   const randomColorIndex = Math.floor(Math.random() * Colors.length);
+  const [isLoadingCategory, setIsLoadingCategory] = useState(false);
+  const [isLoadingCategories, setIsLoadingCategories] = useState(false);
+  const [isLoadingTasks, setIsLoadingTasks] = useState(false);
 
   const [isAuth, setIsAuth] = useState(
     getLocalStorage("access") ? true : false
@@ -37,8 +41,12 @@ function App() {
 
   useEffect(() => {
     if (isAuth) {
-      dispatch(retrieveCategories());
-      dispatch(retrieveTasks());
+      setIsLoadingCategories(true);
+      setIsLoadingTasks(true);
+      dispatch(retrieveCategories()).then((res) =>
+        setIsLoadingCategories(false)
+      );
+      dispatch(retrieveTasks()).then((res) => setIsLoadingTasks(false));
     }
   }, [isAuth, dispatch]);
 
@@ -51,6 +59,7 @@ function App() {
         type: "info",
         message: "Rien à ajouter 🧐",
       });
+    setIsLoadingCategory(true);
     dispatch(
       createCategory({ name: inputCategory, color: Colors[randomColorIndex] })
     ).then((res) => {
@@ -64,6 +73,7 @@ function App() {
           type: "error",
           message: `Une erreur est survenue: ${res.error.message} 😦`,
         });
+      setIsLoadingCategory(false);
     });
     setInputCategory("");
   };
@@ -97,6 +107,22 @@ function App() {
         <Login setIsAuth={setIsAuth} setTriggerToaster={setTriggerToaster} />
       </main>
     );
+
+  if (isLoadingCategories || isLoadingTasks)
+    return (
+      <main
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100dvh",
+        }}
+      >
+        <IconLoader width={150} height={150} />
+      </main>
+    );
+
   return (
     <>
       {(getCategory401 || getTasks401) && (
@@ -198,7 +224,7 @@ function App() {
               fontWeight: "600",
             }}
           >
-            Ajouter
+            {isLoadingCategory ? <IconLoader /> : "Ajouter"}
           </button>
         </form>
       </main>

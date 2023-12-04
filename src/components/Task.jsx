@@ -1,23 +1,32 @@
 import { useDispatch } from "react-redux";
 import { deleteTask } from "../redux/taskSlice";
+import { useState } from "react";
+import IconLoader from "./IconLoader";
+
 export const Task = ({ task, setTriggerToaster, color }) => {
   //___________________________________________________ Variables
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   //___________________________________________________ Functions
 
   const removeTask = () => {
+    setIsLoading(true);
     dispatch(deleteTask(task.id)).then((res) => {
-      if (res.meta.requestStatus === "fulfilled")
+      if (res.meta.requestStatus === "fulfilled") {
         setTriggerToaster({
           type: "success",
           message: `${task.name}, check 👌`,
         });
-      if (res.meta.requestStatus === "rejected")
+        setIsLoading(false);
+      }
+      if (res.meta.requestStatus === "rejected") {
         setTriggerToaster({
           type: "error",
           message: `Une erreur est survenue: ${res.error.message} 😦`,
         });
+        setIsLoading(false);
+      }
     });
   };
 
@@ -41,7 +50,11 @@ export const Task = ({ task, setTriggerToaster, color }) => {
         }}
         onClick={removeTask}
       >
-        {task.name}
+        {isLoading ? (
+          <IconLoader color={color[0] === "#" ? color : ""} />
+        ) : (
+          task.name
+        )}
       </li>
     </>
   );

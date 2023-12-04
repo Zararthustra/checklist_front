@@ -1,10 +1,13 @@
 import { useDispatch } from "react-redux";
 import { refreshTokenUser } from "../redux/userSlice";
 import { getLocalStorage, saveLocalStorage } from "../utils/localStorage";
+import IconLoader from "./IconLoader";
+import { useState } from "react";
 
 export const Reconnect = ({ setTriggerToaster }) => {
   //___________________________________________________ Variables
   const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
   const username = getLocalStorage("username");
 
@@ -14,6 +17,7 @@ export const Reconnect = ({ setTriggerToaster }) => {
     window.location.reload();
   };
   const reconnect = () => {
+    setIsLoading(true);
     dispatch(
       refreshTokenUser({
         refresh: getLocalStorage("refresh"),
@@ -28,9 +32,13 @@ export const Reconnect = ({ setTriggerToaster }) => {
         saveLocalStorage("username", username);
         saveLocalStorage("access", user.payload.access);
         saveLocalStorage("refresh", user.payload.refresh);
+        setIsLoading(false);
         window.location.reload();
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error);
+        setIsLoading(false);
+      });
   };
   //___________________________________________________ Render
 
@@ -108,7 +116,7 @@ export const Reconnect = ({ setTriggerToaster }) => {
               cursor: "pointer",
             }}
           >
-            Reconnexion
+            {isLoading ? <IconLoader /> : "Reconnexion"}
           </button>
           <button
             onClick={logout}

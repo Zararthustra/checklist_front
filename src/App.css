@@ -49,6 +49,18 @@ body {
   overflow: hidden;
 }
 
+.loader-default {
+  animation: rotate 0.5s infinite linear;
+}
+
+@keyframes rotate {
+  0% {
+    rotate: 0deg;
+  }
+  100% {
+    rotate: 360deg;
+  }
+}
 @keyframes openTask {
   from {
     transform: scaleY(0);

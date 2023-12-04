@@ -15,8 +15,8 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
       case "success":
         return (
           <svg
-            width="45"
-            height="45"
+            width="24"
+            height="24"
             viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -35,8 +35,8 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
       case "info":
         return (
           <svg
-            width="45"
-            height="45"
+            width="24"
+            height="24"
             viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -51,8 +51,8 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
       case "error":
         return (
           <svg
-            width="45"
-            height="45"
+            width="24"
+            height="24"
             viewBox="0 0 30 30"
             fill="none"
             xmlns="http://www.w3.org/2000/svg"
@@ -87,13 +87,13 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
             : "#5565c0",
         top: "2rem",
         borderRadius: "20px 0",
-        padding: ".5rem 1rem",
+        padding: "0rem 1rem",
         display: "flex",
         alignItems: "center",
-        boxShadow: "0 0 50px 10px #444",
         gap: "1rem",
         color: "white",
         cursor: "pointer",
+        maxWidth: "80%",
       }}
     >
       <div
@@ -108,7 +108,7 @@ export const Toaster = ({ type, message, setTriggerToaster }) => {
       </div>
       <div
         style={{
-          fontSize: "1.5rem",
+          fontSize: "1rem",
           textAlign: "center",
           width: "100%",
         }}
